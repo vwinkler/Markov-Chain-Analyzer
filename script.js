@@ -4,7 +4,16 @@ function load() {
     let graph = new Graph("canvasid");
     let nodeA = graph.node(100, 100, 20, "A");
     let nodeB = graph.node(200, 100, 20, "B");
-    nodeA.connect(nodeB);
+    let nodeC = graph.node(200, 200, 20, "C");
+    nodeA.directional(nodeB);
+    nodeA.directional(nodeA);
+    nodeB.directional(nodeC);
+
+    let edges = Object.values(graph.edges);
+    console.log(typeof edges);
+    for(edge of edges) {
+        console.log(edge);
+    }
 }
 
 function fitCanvas() {
