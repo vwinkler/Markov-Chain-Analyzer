@@ -25,3 +25,5 @@ function fitCanvas() {
     canvas.width = rect.width;
     canvas.height = rect.height;
 }
+
+let memoryManager = new EmscriptenMemoryManager();
