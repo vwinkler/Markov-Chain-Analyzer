@@ -2,6 +2,9 @@ function load() {
     fitCanvas();
 
     let graph = new Graph("canvasid");
+    graph.setDirectional();
+
+
     let nodeA = graph.node(100, 100, 20, "A");
     let nodeB = graph.node(200, 100, 20, "B");
     let nodeC = graph.node(200, 200, 20, "C");
