@@ -1,6 +1,6 @@
 #container {
     width: 100%;
-    height: 100%;
+    height: 60%;
     display: flex;
 }
 
@@ -22,4 +22,18 @@
 
 #canvasid {
     display: inline-block;
+}
+
+#analysis {
+    width: 100%;
+    height: 40%;
+    display: flex;
+}
+
+#transitionMatrixContainer {
+    border: 1px solid black;
+}
+
+#transitionMatrixContainer {
+    width: 300px;
 }
