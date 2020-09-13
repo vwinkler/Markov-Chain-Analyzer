@@ -32,10 +32,42 @@ EdgeError.prototype = Object.create(Error.prototype);
 EdgeError.prototype.constructor = EdgeError;
 
 class MarkovChain {
-    constructor(numStates, transitions) {
+    constructor(numTransientStates, numAbsorbingStates, transitions) {
+        let numStates = numTransientStates + numAbsorbingStates;
         let triplet = new Triplet(numStates, numStates);
+        let foundTransientStates = new Set();
         for (const transition of transitions) {
-            triplet.addEntry(transition.probability, transition.sourceStateId, transition.targetStateId);
+            let message = "";
+            if (transition.sourceStateId < 0 || numStates <= transition.sourceStateId) {
+                message = "invalid source state";
+            } else if (transition.targetStateId < 0 || numStates <= transition.targetStateId) {
+                message = "unknown target state";
+            } else if (numTransientStates <= transition.sourceStateId) {
+                if (transition.targetStateId != transition.sourceStateId) {
+                    message = "invalid transition out of absorbing state";
+                }
+            }
+            if (message != "") {
+                throw new EdgeError(message, transition.sourceStateId, transition.targetStateId);
+            }
+
+            if (transition.targetStateId != transition.sourceStateId) {
+                foundTransientStates.add(transition.sourceStateId);
+            }
+
+            if (transition.sourceStateId < numTransientStates) {
+                triplet.addEntry(transition.probability, transition.sourceStateId, transition.targetStateId);
+            }
+        }
+
+        for (let i = 0; i < numTransientStates; i++) {
+            if (!foundTransientStates.has(i)) {
+                throw new StateError("invalid transient state without out transition", i);
+            }
+        }
+
+        for (let i = 0; i < numAbsorbingStates; i++) {
+            triplet.addEntry(1.0, i + numTransientStates, i + numTransientStates);
         }
         this.transitionMatrix = SparseMatrix.fromTriplet(triplet);
     }

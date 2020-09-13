@@ -1,5 +1,6 @@
 var graph;
 var nodeNames = [];
+var numTransientStates = 0;
 
 function load() {
     fitCanvas();
@@ -30,12 +31,31 @@ function fitCanvas() {
 
 let memoryManager = new EmscriptenMemoryManager();
 
+function findTransientNodeIds() {
+    let transientNodeIds = new Set();
+    for (const edgeId in graph.edges) {
+        let edge = graph.edges[edgeId];
+
+        if (edge.startNodeid != edge.endNodeid && edge.weight != 0) {
+            transientNodeIds.add(edge.startNodeid);
+        }
+    }
+    return transientNodeIds;
+}
+
 function translateNodes() {
-    let currentId = 0;
+    let transientNodeIds = findTransientNodeIds();
+    numTransientStates = transientNodeIds.size;
+    let currentTransientId = 0;
+    let currentAbsorbingId = transientNodeIds.size;
     let nodeTranslation = {};
     for (const id in graph.objs) {
-        let node = graph.objs[id];
-        nodeTranslation[id] = currentId++;
+        let node = graph.getNodeById(id);
+        if(transientNodeIds.has(node.id)) {
+            nodeTranslation[node.id] = currentTransientId++;
+        } else {
+            nodeTranslation[node.id] = currentAbsorbingId++;
+        }
     }
     return nodeTranslation;
 }
@@ -62,7 +82,8 @@ function translateMarkovChain() {
     let nodeTranslation = translateNodes();
     extractNodeNames(nodeTranslation);
     let transitions = translateTransitions(nodeTranslation);
-    return new MarkovChain(Object.keys(nodeTranslation).length, transitions);
+    let numStates = Object.keys(nodeTranslation).length;
+    return new MarkovChain(numTransientStates, numStates - numTransientStates, transitions);
 }
 
 function turnMatrixToLatex(transitionMatrix) {
