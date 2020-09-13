@@ -52,8 +52,8 @@ function translateTransitions(nodeTranslation) {
 
 function extractNodeNames(nodeTranslation) {
     for (const id in graph.objs) {
-        let node = graph.objs[id];
-        nodeNames[nodeTranslation[node.id]] = node.name;
+        let node = graph.getNodeById(id);
+        nodeNames[nodeTranslation[node.id]] = node.text;
     }
 }
 
@@ -80,8 +80,35 @@ function turnMatrixToLatex(transitionMatrix) {
     return matrixTex;
 }
 
+function makeErrorPositionMessage(error) {
+    let errorPositionMessage = "";
+    if (error instanceof StateError) {
+        errorPositionMessage = "Error in state '" + nodeNames[error.state] + "'";
+    } else if (error instanceof EdgeError) {
+        errorPositionMessage = "Error in transition '" + nodeNames[error.sourceState]
+            + "' -> '" + nodeNames[error.targetState] + "'";
+    } else {
+        errorPositionMessage = "Error";
+    }
+    return errorPositionMessage;
+}
+
+function displayErrors(markovChain) {
+    let errors = markovChain.findErrors();
+    let errorHtml = "";
+    for (const error of errors) {
+        errorHtml += "<p>" + makeErrorPositionMessage(error) + ": " + error.message + "</p>";
+    }
+    if(errors.length == 0) {
+        errorHtml = "no errors";
+    }
+    document.getElementById("errorList").innerHTML = errorHtml;
+}
+
 function updateAnalysis() {
     let markovChain = translateMarkovChain();
+    displayErrors(markovChain);
+
     let transitionMatrix = markovChain.formTransitionMatrix();
     let tex = turnMatrixToLatex(transitionMatrix);
     document.getElementById("transitionMatrix").innerHTML = tex;

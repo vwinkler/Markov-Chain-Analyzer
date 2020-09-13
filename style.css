@@ -4,7 +4,7 @@
     display: flex;
 }
 
-#canvasContainer, #usageDescription {
+#canvasContainer, #infoBoxContainer {
     border: 1px solid black;
 }
 
@@ -13,7 +13,7 @@
     height: 100%;
 }
 
-#usageDescription {
+#infoBoxContainer {
     display: block;
     vertical-align: center;
     width: 450px;
@@ -22,6 +22,38 @@
 
 #canvasid {
     display: inline-block;
+}
+
+#infoBox {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+}
+
+#usageDescription {
+    flex: 0 1 auto;
+}
+
+#errorListContainer {
+    flex: 1 1 auto;
+}
+
+#errorList {
+    color: orangered;
+}
+
+#errorListContainer {
+    height: 100%;
+    position: relative;
+}
+
+#errorList {
+    overflow-y: scroll;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 #analysis {
