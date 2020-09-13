@@ -11,9 +11,10 @@ function load() {
     let nodeA = graph.node(100, 100, 20, "A");
     let nodeB = graph.node(200, 100, 20, "B");
     let nodeC = graph.node(200, 200, 20, "C");
-    nodeA.directional(nodeB, 10);
-    nodeA.directional(nodeA, 20);
-    nodeB.directional(nodeC, 30);
+    nodeA.directional(nodeB, 0.2);
+    nodeA.directional(nodeA, 0.8);
+    nodeB.directional(nodeC, 1.0);
+    nodeC.directional(nodeC, 1.0);
 
     graph.setTickCallback(function (g) {
         updateAnalysis();
