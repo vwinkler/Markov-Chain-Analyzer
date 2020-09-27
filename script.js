@@ -17,9 +17,7 @@ function load() {
     nodeB.directional(nodeC, 1.0);
     nodeC.directional(nodeC, 1.0);
 
-    graph.setTickCallback(function (g) {
-        updateAnalysis();
-    });
+    updateAnalysis();
 }
 
 function fitCanvas() {
