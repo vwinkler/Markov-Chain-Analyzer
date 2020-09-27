@@ -86,6 +86,11 @@ function translateMarkovChain() {
     return new MarkovChain(numTransientStates, numStates - numTransientStates, transitions);
 }
 
+function roundToDigit(val, digit) {
+    let digitFactor = Math.pow(10, digit);
+    return Math.round((val + Number.EPSILON) * digitFactor) / digitFactor;
+}
+
 function turnMatrixToLatex(transitionMatrix) {
     let matrixTex = "";
     matrixTex += "\\begin{pmatrix} ";
@@ -94,7 +99,7 @@ function turnMatrixToLatex(transitionMatrix) {
             if (t > 0) {
                 matrixTex += " & ";
             }
-            matrixTex += transitionMatrix.get(s, t);
+            matrixTex += roundToDigit(transitionMatrix.get(s, t), 2);
         }
         matrixTex += " \\\\ ";
     }
