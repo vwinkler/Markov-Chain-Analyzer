@@ -70,6 +70,23 @@ class MarkovChain {
             triplet.addEntry(1.0, i + numTransientStates, i + numTransientStates);
         }
         this.transitionMatrix = SparseMatrix.fromTriplet(triplet);
+        this.numAbsorbingStates = numAbsorbingStates;
+    }
+
+    get numTransientStates() {
+        return this.numStates - this.numAbsorbingStates;
+    }
+
+    get numStates() {
+        return this.transitionMatrix.nCols();
+    }
+
+    get transientStateTransitionMatrix() {
+        return this.transitionMatrix.subMatrix(0, numTransientStates, 0, numTransientStates);
+    }
+
+    get inverseFundamentelMatrix() {
+        return SparseMatrix.identity(numTransientStates, numTransientStates).minus(this.transientStateTransitionMatrix);
     }
 
     findErrors() {
@@ -107,5 +124,9 @@ class MarkovChain {
 
     formTransitionMatrix() {
         return this.transitionMatrix.toDense();
+    }
+
+    formInverseFundamentalMatrix() {
+        return this.inverseFundamentelMatrix.toDense();
     }
 }

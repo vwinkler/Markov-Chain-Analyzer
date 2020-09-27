@@ -10,8 +10,8 @@ function load() {
 
 
     let nodeA = graph.node(100, 100, 20, "A");
-    let nodeB = graph.node(200, 100, 20, "B");
     let nodeC = graph.node(200, 200, 20, "C");
+    let nodeB = graph.node(200, 100, 20, "B");
     nodeA.directional(nodeB, 0.2);
     nodeA.directional(nodeA, 0.8);
     nodeB.directional(nodeC, 1.0);
@@ -127,13 +127,21 @@ function displayErrors(markovChain) {
     document.getElementById("errorList").innerHTML = errorHtml;
 }
 
+function displayTransitionMatrix(markovChain) {
+    document.getElementById("transitionMatrix").innerHTML = turnMatrixToLatex(markovChain.formTransitionMatrix());
+}
+
+function displayFundamentalMatrix(markovChain) {
+    document.getElementById("fundamentalMatrix").innerHTML = "$$" + turnMatrixToLatex(markovChain.formInverseFundamentalMatrix()) + "^{-1}$$";
+}
+
 function updateAnalysis() {
     let markovChain = translateMarkovChain();
     displayErrors(markovChain);
 
-    let transitionMatrix = markovChain.formTransitionMatrix();
-    let tex = turnMatrixToLatex(transitionMatrix);
-    document.getElementById("transitionMatrix").innerHTML = tex;
+    displayTransitionMatrix(markovChain);
+    displayFundamentalMatrix(markovChain);
+
 
     MathJax.typeset();
 }
