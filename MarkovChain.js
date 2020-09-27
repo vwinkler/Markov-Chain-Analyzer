@@ -35,6 +35,17 @@ function solveLinearEquationSystem(A, b) {
     return A.lu().solveSquare(b);
 }
 
+function solveLinearEquationSystems(A, B) {
+    let lu = A.lu();
+    let X = DenseMatrix.zeros(numTransientStates, 0);
+    for (let i = 0; i < B.nCols(); i++) {
+        let b = B.subMatrix(0, B.nRows(), i, i + 1).toDense();
+        let x = lu.solveSquare(b);
+        X = X.hcat(x);
+    }
+    return X;
+}
+
 class MarkovChain {
     constructor(numTransientStates, numAbsorbingStates, transitions) {
         let numStates = numTransientStates + numAbsorbingStates;
@@ -89,6 +100,10 @@ class MarkovChain {
         return this.transitionMatrix.subMatrix(0, numTransientStates, 0, numTransientStates);
     }
 
+    get transientStateToAbsorbingStateTransitionMatrix() {
+        return this.transitionMatrix.subMatrix(0, this.numTransientStates, numTransientStates, this.numStates);
+    }
+
     get inverseFundamentelMatrix() {
         return SparseMatrix.identity(numTransientStates, numTransientStates).minus(this.transientStateTransitionMatrix);
     }
@@ -138,5 +153,11 @@ class MarkovChain {
         let A = this.inverseFundamentelMatrix;
         let b = DenseMatrix.ones(this.numTransientStates);
         return solveLinearEquationSystem(A, b);
+    }
+
+    formAbsorbingStateProbabilityMatrix() {
+        let A = this.inverseFundamentelMatrix;
+        let B = this.transientStateToAbsorbingStateTransitionMatrix;
+        return solveLinearEquationSystems(A, B);
     }
 }

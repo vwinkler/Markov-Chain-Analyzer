@@ -144,6 +144,10 @@ function displayExpectedStepsVector(markovChain) {
     document.getElementById("expectedStepsVector").innerHTML = turnMatrixToLatex(markovChain.formExpectedNumberOfStepsByStartStateMatrix());
 }
 
+function displayProbableAbsorbersMatrix(markovChain) {
+    document.getElementById("probableAbsorberMatrix").innerHTML = turnMatrixToLatex(markovChain.formAbsorbingStateProbabilityMatrix());
+}
+
 function updateAnalysis() {
     let markovChain = translateMarkovChain();
     displayErrors(markovChain);
@@ -151,6 +155,7 @@ function updateAnalysis() {
     displayTransitionMatrix(markovChain);
     displayFundamentalMatrix(markovChain);
     displayExpectedStepsVector(markovChain);
+    displayProbableAbsorbersMatrix(markovChain);
 
     MathJax.typeset();
 }
