@@ -62,7 +62,7 @@
     display: flex;
 }
 
-#transitionMatrixContainer, #fundamentalMatrixContainer {
+#transitionMatrixContainer, #fundamentalMatrixContainer, #expectedStepsVectorContainer {
     border: 1px solid black;
 }
 
@@ -70,5 +70,8 @@
     width: 300px;
 }
 #fundamentalMatrixContainer {
+    width: 300px;
+}
+#expectedStepsVectorContainer {
     width: 300px;
 }

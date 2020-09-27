@@ -31,6 +31,10 @@ function EdgeError(message, sourceState, targetState) {
 EdgeError.prototype = Object.create(Error.prototype);
 EdgeError.prototype.constructor = EdgeError;
 
+function solveLinearEquationSystem(A, b) {
+    return A.lu().solveSquare(b);
+}
+
 class MarkovChain {
     constructor(numTransientStates, numAbsorbingStates, transitions) {
         let numStates = numTransientStates + numAbsorbingStates;
@@ -128,5 +132,11 @@ class MarkovChain {
 
     formInverseFundamentalMatrix() {
         return this.inverseFundamentelMatrix.toDense();
+    }
+
+    formExpectedNumberOfStepsByStartStateMatrix() {
+        let A = this.inverseFundamentelMatrix;
+        let b = DenseMatrix.ones(this.numTransientStates);
+        return solveLinearEquationSystem(A, b);
     }
 }

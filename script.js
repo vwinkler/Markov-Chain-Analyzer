@@ -140,13 +140,17 @@ function displayFundamentalMatrix(markovChain) {
     document.getElementById("fundamentalMatrix").innerHTML = "$$" + turnMatrixToLatex(markovChain.formInverseFundamentalMatrix()) + "^{-1}$$";
 }
 
+function displayExpectedStepsVector(markovChain) {
+    document.getElementById("expectedStepsVector").innerHTML = turnMatrixToLatex(markovChain.formExpectedNumberOfStepsByStartStateMatrix());
+}
+
 function updateAnalysis() {
     let markovChain = translateMarkovChain();
     displayErrors(markovChain);
 
     displayTransitionMatrix(markovChain);
     displayFundamentalMatrix(markovChain);
-
+    displayExpectedStepsVector(markovChain);
 
     MathJax.typeset();
 }
