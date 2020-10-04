@@ -89,6 +89,16 @@ function roundToDigit(val, digit) {
     return Math.round((val + Number.EPSILON) * digitFactor) / digitFactor;
 }
 
+function turnNumberToLatex(x) {
+    if (x === Infinity) {
+        return "\\infty";
+    } else if (x === -Infinity) {
+        return "-\\infty";
+    } else {
+        return "" + x;
+    }
+}
+
 function turnMatrixToLatex(transitionMatrix) {
     let matrixTex = "";
     matrixTex += "\\begin{pmatrix} ";
@@ -97,7 +107,7 @@ function turnMatrixToLatex(transitionMatrix) {
             if (t > 0) {
                 matrixTex += " & ";
             }
-            matrixTex += roundToDigit(transitionMatrix.get(s, t), 2);
+            matrixTex += turnNumberToLatex(roundToDigit(transitionMatrix.get(s, t), 2));
         }
         matrixTex += " \\\\ ";
     }
@@ -131,19 +141,55 @@ function displayErrors(markovChain) {
 }
 
 function displayTransitionMatrix(markovChain) {
-    document.getElementById("transitionMatrix").innerHTML = turnMatrixToLatex(markovChain.formTransitionMatrix());
+    let html;
+    try {
+        html = turnMatrixToLatex(markovChain.formTransitionMatrix());
+    } catch (e) {
+        console.log(e);
+        html = "ERROR";
+    }
+    document.getElementById("transitionMatrix").innerHTML = html;
 }
 
 function displayFundamentalMatrix(markovChain) {
-    document.getElementById("fundamentalMatrix").innerHTML = "$$" + turnMatrixToLatex(markovChain.formInverseFundamentalMatrix()) + "^{-1}$$";
+    let html;
+    try {
+        html = "$$" + turnMatrixToLatex(markovChain.formInverseFundamentalMatrix()) + "^{-1}$$";
+    } catch (e) {
+        console.log(e);
+        html = "ERROR";
+    }
+    document.getElementById("fundamentalMatrix").innerHTML = html;
 }
 
 function displayExpectedStepsVector(markovChain) {
-    document.getElementById("expectedStepsVector").innerHTML = turnMatrixToLatex(markovChain.formExpectedNumberOfStepsByStartStateMatrix());
+    let html;
+    if (markovChain.isAbsorbing) {
+        try {
+            html = turnMatrixToLatex(markovChain.formExpectedNumberOfStepsByStartStateMatrix());
+        } catch (e) {
+            console.log(e);
+            html = "ERROR";
+        }
+    } else {
+        html = "Markov chain is not absorbing. Some states never reach an absorbing state";
+    }
+    document.getElementById("expectedStepsVector").innerHTML = html;
 }
 
 function displayProbableAbsorbersMatrix(markovChain) {
-    document.getElementById("probableAbsorberMatrix").innerHTML = turnMatrixToLatex(markovChain.formAbsorbingStateProbabilityMatrix());
+    let html;
+    if (markovChain.isAbsorbing) {
+        try {
+            html = turnMatrixToLatex(markovChain.formAbsorbingStateProbabilityMatrix());
+        } catch (e) {
+            console.log(e);
+            html = "ERROR";
+        }
+    } else {
+        html = "Markov chain is not absorbing. Some states never reach an absorbing state";
+    }
+    document.getElementById("probableAbsorberMatrix").innerHTML = html;
 }
 
 function updateAnalysis() {

@@ -86,6 +86,7 @@ class MarkovChain {
         }
         this.transitionMatrix = SparseMatrix.fromTriplet(triplet);
         this.numAbsorbingStates = numAbsorbingStates;
+        this.isAbsorbing = this.calcIsAbsorbing();
     }
 
     get numTransientStates() {
@@ -141,6 +142,29 @@ class MarkovChain {
         return errors;
     }
 
+    calcIsAbsorbing() {
+        let markovChain = this;
+        let transitionMatrix = this.formTransitionMatrix();
+        let visitedStates = new Set();
+
+        let visit = function(state) {
+            if(!visitedStates.has(state)) {
+                visitedStates.add(state);
+                for (let j = 0; j < markovChain.numTransientStates; j++) {
+                    if (transitionMatrix.get(j, state) > 0) {
+                        visit(j);
+                    }
+                }
+            }
+        }
+
+        for (let absorbingState = this.numTransientStates; absorbingState < this.numStates; absorbingState++) {
+            visit(absorbingState);
+        }
+
+        return visitedStates.size == this.numStates;
+    }
+
     formTransitionMatrix() {
         return this.transitionMatrix.toDense();
     }
@@ -150,9 +174,13 @@ class MarkovChain {
     }
 
     formExpectedNumberOfStepsByStartStateMatrix() {
-        let A = this.inverseFundamentelMatrix;
-        let b = DenseMatrix.ones(this.numTransientStates);
-        return solveLinearEquationSystem(A, b);
+        if (this.numAbsorbingStates == 0) {
+            return DenseMatrix.ones(this.numTransientStates).timesReal(Infinity);
+        } else {
+            let A = this.inverseFundamentelMatrix;
+            let b = DenseMatrix.ones(this.numTransientStates);
+            return solveLinearEquationSystem(A, b);
+        }
     }
 
     formAbsorbingStateProbabilityMatrix() {
