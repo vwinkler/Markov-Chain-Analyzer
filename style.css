@@ -38,8 +38,16 @@
     flex: 1 1 auto;
 }
 
-#errorList {
+.message.error {
     color: orangered;
+}
+
+.message.info {
+    color: cornflowerblue;
+}
+
+.message.warning {
+    color: #eed202
 }
 
 #errorListContainer {

@@ -132,10 +132,10 @@ function displayErrors(markovChain) {
     let errors = markovChain.findErrors();
     let errorHtml = "";
     for (const error of errors) {
-        errorHtml += "<p>" + makeErrorPositionMessage(error) + ": " + error.message + "</p>";
+        errorHtml += "<p class='message error'>" + makeErrorPositionMessage(error) + ": " + error.message + "</p>";
     }
     if(errors.length == 0) {
-        errorHtml = "no errors";
+        errorHtml = "<p class='message info'>no errors</p>";
     }
     document.getElementById("errorList").innerHTML = errorHtml;
 }
@@ -146,7 +146,7 @@ function displayTransitionMatrix(markovChain) {
         html = turnMatrixToLatex(markovChain.formTransitionMatrix());
     } catch (e) {
         console.log(e);
-        html = "ERROR";
+        html = "<p class='message error'>unknown ERROR</p>";
     }
     document.getElementById("transitionMatrix").innerHTML = html;
 }
@@ -157,7 +157,7 @@ function displayFundamentalMatrix(markovChain) {
         html = "$$" + turnMatrixToLatex(markovChain.formInverseFundamentalMatrix()) + "^{-1}$$";
     } catch (e) {
         console.log(e);
-        html = "ERROR";
+        html = "<p class='message error'>unknown ERROR</p>";
     }
     document.getElementById("fundamentalMatrix").innerHTML = html;
 }
@@ -169,10 +169,10 @@ function displayExpectedStepsVector(markovChain) {
             html = turnMatrixToLatex(markovChain.formExpectedNumberOfStepsByStartStateMatrix());
         } catch (e) {
             console.log(e);
-            html = "ERROR";
+            html = "<p class='message error'>unknown ERROR</p>";
         }
     } else {
-        html = "Markov chain is not absorbing. Some states never reach an absorbing state";
+        html = "<p class='message error'>Markov chain is not absorbing. Some states never reach an absorbing state</p>";
     }
     document.getElementById("expectedStepsVector").innerHTML = html;
 }
@@ -184,10 +184,10 @@ function displayProbableAbsorbersMatrix(markovChain) {
             html = turnMatrixToLatex(markovChain.formAbsorbingStateProbabilityMatrix());
         } catch (e) {
             console.log(e);
-            html = "ERROR";
+            html = "<p class='message error'>unknown ERROR</p>";
         }
     } else {
-        html = "Markov chain is not absorbing. Some states never reach an absorbing state";
+        html = "<p class='message error'>Markov chain is not absorbing. Some states never reach an absorbing state</p>";
     }
     document.getElementById("probableAbsorberMatrix").innerHTML = html;
 }
