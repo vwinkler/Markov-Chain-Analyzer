@@ -115,6 +115,54 @@ function turnMatrixToLatex(transitionMatrix) {
     return matrixTex;
 }
 
+function turnLabelsToHorizontalTexArray(columnLabels) {
+    let columnLabelsTex = "";
+    columnLabelsTex += "\\begin{array}{" + "c".repeat(columnLabels.length) + "}";
+    for (let i = 0; i < columnLabels.length - 1; i++) {
+        columnLabelsTex += columnLabels[i] + " & ";
+    }
+    columnLabelsTex += columnLabels[columnLabels.length - 1] + "\\end{array}";
+    return columnLabelsTex;
+}
+
+function turnLabelsToVerticalArray(rowLabels) {
+    let rowLabelsTex = "";
+    rowLabelsTex += "\\begin{array}{c} ";
+    for (let i = 0; i < rowLabels.length- 1; i++) {
+        rowLabelsTex += rowLabels[i] + "\\\\ ";
+    }
+    rowLabelsTex += rowLabels[rowLabels.length - 1] + "\\end{array}";
+    return rowLabelsTex;
+}
+
+function turnMatrixToLatexArray(transitionMatrix) {
+    let matrixArrayTex = "";
+    matrixArrayTex += "\\left(\\begin{array}{}"
+    for (let s = 0; s < transitionMatrix.nCols(); s++) {
+        for (let t = 0; t < transitionMatrix.nCols(); t++) {
+            if (t > 0) {
+                matrixArrayTex += " & ";
+            }
+            matrixArrayTex += turnNumberToLatex(roundToDigit(transitionMatrix.get(s, t), 2));
+        }
+        matrixArrayTex += " \\\\ ";
+    }
+    matrixArrayTex += " \\end{array}\\right)";
+    return matrixArrayTex;
+}
+
+function turnLabeledMatrixToLatex(transitionMatrix, rowLabels, columnLabels) {
+    assert(transitionMatrix.nRows() == rowLabels.length);
+    assert(transitionMatrix.nCols() == columnLabels.length);
+    let matrixTex = "";
+    matrixTex += "\\begin{equation*}\\begin{array}{cc}";
+    matrixTex += turnLabelsToHorizontalTexArray(columnLabels) + " & \\\\";
+    matrixTex += turnMatrixToLatexArray(transitionMatrix) + " & ";
+    matrixTex += turnLabelsToVerticalArray(rowLabels);
+    matrixTex += "\\end{array}\\end{equation*}";
+    return matrixTex;
+}
+
 function makeErrorPositionMessage(error) {
     let errorPositionMessage = "";
     if (error instanceof StateError) {
@@ -143,7 +191,9 @@ function displayErrors(markovChain) {
 function displayTransitionMatrix(markovChain) {
     let html;
     try {
-        html = turnMatrixToLatex(markovChain.formTransitionMatrix());
+        let matrix = markovChain.formTransitionMatrix();
+        let labels = nodeNames.copyWithin(0, matrix.nCols());
+        html = turnLabeledMatrixToLatex(matrix, labels, labels);
     } catch (e) {
         console.log(e);
         html = "<p class='message error'>unknown ERROR</p>";
