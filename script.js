@@ -200,7 +200,9 @@ function displayExpectedStepsVector(markovChain) {
     let html;
     if (markovChain.isAbsorbing) {
         try {
-            html = turnMatrixToLatex(markovChain.formExpectedNumberOfStepsByStartStateMatrix());
+            let matrix = markovChain.formExpectedNumberOfStepsByStartStateMatrix();
+            let labels = nodeNames.slice( 0, markovChain.numTransientStates);
+            html = turnLabeledMatrixToLatex(matrix, labels, [""]);
         } catch (e) {
             console.log(e);
             html = "<p class='message error'>unknown ERROR</p>";
