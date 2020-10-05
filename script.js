@@ -217,7 +217,10 @@ function displayProbableAbsorbersMatrix(markovChain) {
     let html;
     if (markovChain.isAbsorbing) {
         try {
-            html = turnMatrixToLatex(markovChain.formAbsorbingStateProbabilityMatrix());
+            let matrix = markovChain.formAbsorbingStateProbabilityMatrix();
+            let transientStateLabels = nodeNames.slice( 0, markovChain.numTransientStates);
+            let absorbingStateLabels = nodeNames.slice( markovChain.numTransientStates, markovChain.numStates);
+            html = turnLabeledMatrixToLatex(matrix, transientStateLabels, absorbingStateLabels);
         } catch (e) {
             console.log(e);
             html = "<p class='message error'>unknown ERROR</p>";
