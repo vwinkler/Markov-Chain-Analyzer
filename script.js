@@ -135,13 +135,13 @@ function turnLabelsToVerticalArray(rowLabels) {
     return rowLabelsTex;
 }
 
-function turnLabeledMatrixToLatex(transitionMatrix, rowLabels, columnLabels) {
+function turnLabeledMatrixToLatex(transitionMatrix, rowLabels, columnLabels, precedingTex = "") {
     assert(transitionMatrix.nRows() == rowLabels.length);
     assert(transitionMatrix.nCols() == columnLabels.length);
     let matrixTex = "";
-    matrixTex += "\\begin{array}{cc}";
-    matrixTex += turnLabelsToHorizontalTexArray(columnLabels) + " & \\\\";
-    matrixTex += turnMatrixToLatex(transitionMatrix) + " & ";
+    matrixTex += "\\begin{array}{ccc}";
+    matrixTex += "& " + turnLabelsToHorizontalTexArray(columnLabels) + " & \\\\";
+    matrixTex += precedingTex +  "&" + turnMatrixToLatex(transitionMatrix) + " & ";
     matrixTex += turnLabelsToVerticalArray(rowLabels);
     matrixTex += "\\end{array}";
     return matrixTex;
