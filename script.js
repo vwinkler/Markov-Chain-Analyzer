@@ -4,7 +4,7 @@ var numTransientStates = 0;
 
 function load() {
     fitCanvas();
-    let urlToGraphConverter = new UrlToGraphConverter(new URL(document.location));
+    let urlToGraphConverter = new UrlToGraphConverter(new URL(document.location), "canvasid");
     graph = urlToGraphConverter.makeGraph();
     updateAnalysis();
 }

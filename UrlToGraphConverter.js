@@ -1,7 +1,7 @@
 class UrlToGraphConverter {
-    constructor(url) {
+    constructor(url, canvasid) {
         this.url = url;
-        this.graph = new Graph("canvasid");
+        this.graph = new Graph(canvasid);
         this.graph.setDirectional();
         this.nodes = [];
     }
