@@ -4,19 +4,8 @@ var numTransientStates = 0;
 
 function load() {
     fitCanvas();
-
-    graph = new Graph("canvasid");
-    graph.setDirectional();
-
-
-    let nodeA = graph.node(100, 100, 20, "A");
-    let nodeC = graph.node(200, 200, 20, "C");
-    let nodeB = graph.node(200, 100, 20, "B");
-    nodeA.directional(nodeB, 0.2);
-    nodeA.directional(nodeA, 0.8);
-    nodeB.directional(nodeC, 1.0);
-    nodeC.directional(nodeC, 1.0);
-
+    let urlToGraphConverter = new UrlToGraphConverter(new URL(document.location));
+    graph = urlToGraphConverter.makeGraph();
     updateAnalysis();
 }
 
