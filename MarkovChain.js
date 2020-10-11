@@ -169,6 +169,14 @@ class MarkovChain {
         return this.transitionMatrix.toDense();
     }
 
+    formTransientStateTransitionMatrix() {
+        return this.transientStateTransitionMatrix.toDense()
+    }
+
+    formTransientStateToAbsorbingStateTransitionMatrix() {
+        return this.transientStateToAbsorbingStateTransitionMatrix.toDense();
+    }
+
     formInverseFundamentalMatrix() {
         return this.inverseFundamentelMatrix.toDense();
     }

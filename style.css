@@ -70,13 +70,18 @@
     display: flex;
 }
 
-#transitionMatrixContainer, #fundamentalMatrixContainer, #expectedStepsVectorContainer, #probableAbsorberMatrixContainer {
+#transitionMatrixContainer, #transitionMatrixSeparationContainer, #fundamentalMatrixContainer, #expectedStepsVectorContainer, #probableAbsorberMatrixContainer {
     border: 1px solid black;
 }
 
 #transitionMatrixContainer {
     width: 300px;
 }
+
+#transitionMatrixSeparationContainer {
+    width: 300px;
+}
+
 #fundamentalMatrixContainer {
     width: 300px;
 }

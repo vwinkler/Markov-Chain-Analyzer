@@ -172,14 +172,42 @@ function displayErrors(markovChain) {
     document.getElementById("errorList").innerHTML = errorHtml;
 }
 
+function generateTransitionMatrixEquation(markovChain) {
+    let transitionMatrix;
+    let matrix = markovChain.formTransitionMatrix();
+    let labels = nodeNames.copyWithin(0, matrix.nCols());
+    transitionMatrix = "\\begin{equation*}";
+    transitionMatrix += turnLabeledMatrixToLatex(matrix, labels, labels, "P\\ \\colon = ");
+    transitionMatrix += "\\end{equation*}";
+    return transitionMatrix;
+}
+
+function generateTransientStateTransitionMatrixEquation(markovChain) {
+    let transitionMatrix;
+    let matrix = markovChain.formTransientStateTransitionMatrix();
+    let transientStateLabels = nodeNames.slice( 0, markovChain.numTransientStates);
+    let absorbingStateLabels = nodeNames.slice( markovChain.numTransientStates, markovChain.numStates);
+    transitionMatrix = "\\begin{equation*}";
+    transitionMatrix += turnLabeledMatrixToLatex(matrix, transientStateLabels, transientStateLabels, "Q\\ \\colon = ");
+    transitionMatrix += "\\end{equation*}";
+    return transitionMatrix;
+}
+
+function generateTransientStateToAbsorbingStateTransitionMatrixEquation(markovChain) {
+    let transitionMatrix;
+    let matrix = markovChain.formTransientStateToAbsorbingStateTransitionMatrix();
+    let transientStateLabels = nodeNames.slice( 0, markovChain.numTransientStates);
+    let absorbingStateLabels = nodeNames.slice( markovChain.numTransientStates, markovChain.numStates);
+    transitionMatrix = "\\begin{equation*}";
+    transitionMatrix += turnLabeledMatrixToLatex(matrix, transientStateLabels, absorbingStateLabels, "R\\ \\colon = ");
+    transitionMatrix += "\\end{equation*}";
+    return transitionMatrix;
+}
+
 function displayTransitionMatrix(markovChain) {
     let html;
     try {
-        let matrix = markovChain.formTransitionMatrix();
-        let labels = nodeNames.copyWithin(0, matrix.nCols());
-        html = "\\begin{equation*}";
-        html += turnLabeledMatrixToLatex(matrix, labels, labels);
-        html += "\\end{equation*}";
+        html = generateTransitionMatrixEquation(markovChain);
     } catch (e) {
         console.log(e);
         html = "<p class='message error'>unknown ERROR</p>";
@@ -187,10 +215,32 @@ function displayTransitionMatrix(markovChain) {
     document.getElementById("transitionMatrix").innerHTML = html;
 }
 
+function displayTransientStateTransitionMatrixEquation(markovChain) {
+    let html;
+    try {
+        html = generateTransientStateTransitionMatrixEquation(markovChain);
+    } catch (e) {
+        console.log(e);
+        html = "<p class='message error'>unknown ERROR</p>";
+    }
+    document.getElementById("transientStateTransitionMatrixEquation").innerHTML = html;
+}
+
+function displayTransientStateToAbsorbingStateTransitionMatrixEquation(markovChain) {
+    let html;
+    try {
+        html = generateTransientStateToAbsorbingStateTransitionMatrixEquation(markovChain);
+    } catch (e) {
+        console.log(e);
+        html = "<p class='message error'>unknown ERROR</p>";
+    }
+    document.getElementById("transientStateToAbsorbingStateTransitionMatrixEquation").innerHTML = html;
+}
+
 function displayFundamentalMatrix(markovChain) {
     let html;
     try {
-        html = "$$" + turnMatrixToLatex(markovChain.formInverseFundamentalMatrix()) + "^{-1}$$";
+        html = "$$N\\ \\colon = (I - Q)^{-1} = " + turnMatrixToLatex(markovChain.formInverseFundamentalMatrix()) + "^{-1}$$";
     } catch (e) {
         console.log(e);
         html = "<p class='message error'>unknown ERROR</p>";
@@ -204,8 +254,10 @@ function displayExpectedStepsVector(markovChain) {
         try {
             let matrix = markovChain.formExpectedNumberOfStepsByStartStateMatrix();
             let labels = nodeNames.slice( 0, markovChain.numTransientStates);
+            let oneVector = "\\begin{pmatrix}" + "1\\\\ ".repeat(markovChain.numTransientStates) + "\\end{pmatrix}";
+            let precedingTex = "t\\ \\colon = N" + oneVector + "= ";
             html = "\\begin{equation*}";
-            html += turnLabeledMatrixToLatex(matrix, labels, [""]);
+            html += turnLabeledMatrixToLatex(matrix, labels, [""], precedingTex);
             html += "\\end{equation*}";
         } catch (e) {
             console.log(e);
@@ -225,7 +277,7 @@ function displayProbableAbsorbersMatrix(markovChain) {
             let transientStateLabels = nodeNames.slice( 0, markovChain.numTransientStates);
             let absorbingStateLabels = nodeNames.slice( markovChain.numTransientStates, markovChain.numStates);
             html = "\\begin{equation*}";
-            html += turnLabeledMatrixToLatex(matrix, transientStateLabels, absorbingStateLabels);
+            html += turnLabeledMatrixToLatex(matrix, transientStateLabels, absorbingStateLabels, "B\\ \\colon = NR = ");
             html += "\\end{equation*}";
         } catch (e) {
             console.log(e);
@@ -242,6 +294,8 @@ function updateAnalysis() {
     displayErrors(markovChain);
 
     displayTransitionMatrix(markovChain);
+    displayTransientStateTransitionMatrixEquation(markovChain);
+    displayTransientStateToAbsorbingStateTransitionMatrixEquation(markovChain);
     displayFundamentalMatrix(markovChain);
     displayExpectedStepsVector(markovChain);
     displayProbableAbsorbersMatrix(markovChain);

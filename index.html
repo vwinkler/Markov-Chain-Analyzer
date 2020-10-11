@@ -46,20 +46,28 @@
 </div>
 <div id="analysis">
     <div id="transitionMatrixContainer">
-        Transition Matrix
+        <p>The transition matrix of this markov chain is</p>
         <p id="transitionMatrix"/>
+        <p>\((P)_{i,j}\) denotes the probability of a transition to state \(j\) if \(i\) is the current state.</p>
+    </div>
+    <div id="transitionMatrixSeparationContainer">
+        <p>\(P\) can be representet as</p>
+        <p>\[P = \begin{pmatrix} Q & R \\ 0 & I \\ \end{pmatrix}\]</p>
+        <p>with</p>
+        <p id="transientStateTransitionMatrixEquation"/>
+        <p id="transientStateToAbsorbingStateTransitionMatrixEquation"/>
     </div>
     <div id="fundamentalMatrixContainer">
-        Fundamental Matrix
+        <p>If this markov chain is absorbing, its fundamental matrix is</p>
         <p id="fundamentalMatrix"/>
     </div>
     <div id="expectedStepsVectorContainer">
-        expected steps until absorption when starting in state \(i\).
         <p id="expectedStepsVector"/>
+        <p>\(t_i\) is the expected number of steps until absorption if \(i\) is the first state.</p>
     </div>
     <div id="probableAbsorberMatrixContainer">
-        probability of absorption in state \(j\) when starting in state \(i\).
         <p id="probableAbsorberMatrix"/>
+        <p>\((B)_{i,j}\) is the probability of absorption in state \(j\) if \(i\) is the first state.</p>
     </div>
 </div>
 </body>
