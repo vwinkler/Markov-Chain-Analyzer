@@ -37,7 +37,7 @@ function solveLinearEquationSystem(A, b) {
 
 function solveLinearEquationSystems(A, B) {
     let lu = A.lu();
-    let X = DenseMatrix.zeros(numTransientStates, 0);
+    let X = DenseMatrix.zeros(A.nCols(), 0);
     for (let i = 0; i < B.nCols(); i++) {
         let b = B.subMatrix(0, B.nRows(), i, i + 1).toDense();
         let x = lu.solveSquare(b);
@@ -98,15 +98,15 @@ class MarkovChain {
     }
 
     get transientStateTransitionMatrix() {
-        return this.transitionMatrix.subMatrix(0, numTransientStates, 0, numTransientStates);
+        return this.transitionMatrix.subMatrix(0, this.numTransientStates, 0, this.numTransientStates);
     }
 
     get transientStateToAbsorbingStateTransitionMatrix() {
-        return this.transitionMatrix.subMatrix(0, this.numTransientStates, numTransientStates, this.numStates);
+        return this.transitionMatrix.subMatrix(0, this.numTransientStates, this.numTransientStates, this.numStates);
     }
 
     get inverseFundamentelMatrix() {
-        return SparseMatrix.identity(numTransientStates, numTransientStates).minus(this.transientStateTransitionMatrix);
+        return SparseMatrix.identity(this.numTransientStates, this.numTransientStates).minus(this.transientStateTransitionMatrix);
     }
 
     findErrors() {
