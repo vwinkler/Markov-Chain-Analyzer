@@ -1,6 +1,5 @@
-var graph;
-var nodeNames = [];
-var numTransientStates = 0;
+let graph;
+let nodeNames;
 
 function load() {
     fitCanvas();
@@ -17,61 +16,6 @@ function fitCanvas() {
 }
 
 let memoryManager = new EmscriptenMemoryManager();
-
-function findTransientNodeIds() {
-    let transientNodeIds = new Set();
-    for (const edgeId in graph.edges) {
-        let edge = graph.edges[edgeId];
-
-        if (edge.startNodeid != edge.endNodeid && edge.weight != 0) {
-            transientNodeIds.add(edge.startNodeid);
-        }
-    }
-    return transientNodeIds;
-}
-
-function translateNodes() {
-    let transientNodeIds = findTransientNodeIds();
-    numTransientStates = transientNodeIds.size;
-    let currentTransientId = 0;
-    let currentAbsorbingId = transientNodeIds.size;
-    let nodeTranslation = {};
-    for (const id in graph.objs) {
-        let node = graph.getNodeById(id);
-        if(transientNodeIds.has(node.id)) {
-            nodeTranslation[node.id] = currentTransientId++;
-        } else {
-            nodeTranslation[node.id] = currentAbsorbingId++;
-        }
-    }
-    return nodeTranslation;
-}
-
-function translateTransitions(nodeTranslation) {
-    let transitions = [];
-    for (const edgeId in graph.edges) {
-        let edge = graph.edges[edgeId];
-        let sourceId = nodeTranslation[edge.startNodeid];
-        let targetId = nodeTranslation[edge.endNodeid];
-        transitions.push(new Transition(sourceId, targetId, edge.weight));
-    }
-    return transitions;
-}
-
-function extractNodeNames(nodeTranslation) {
-    for (const id in graph.objs) {
-        let node = graph.getNodeById(id);
-        nodeNames[nodeTranslation[node.id]] = node.text;
-    }
-}
-
-function translateMarkovChain() {
-    let nodeTranslation = translateNodes();
-    extractNodeNames(nodeTranslation);
-    let transitions = translateTransitions(nodeTranslation);
-    let numStates = Object.keys(nodeTranslation).length;
-    return new MarkovChain(numTransientStates, numStates - numTransientStates, transitions);
-}
 
 function roundToDigit(val, digit) {
     let digitFactor = Math.pow(10, digit);
@@ -278,8 +222,21 @@ function displayProbableAbsorbersMatrix(markovChain) {
     document.getElementById("probableAbsorberMatrix").innerHTML = html;
 }
 
+function convertEdgesToTransitions(arrangedGraph) {
+    let transitions = [];
+    for (const edge of arrangedGraph.edges) {
+        transitions.push(new Transition(edge.sourceId, edge.targetId, edge.label));
+    }
+    return transitions;
+}
+
 function updateAnalysis() {
-    let markovChain = translateMarkovChain();
+    let graphToArrangedGraphConverter = new GraphToArrangedGraphConverter(graph);
+    let arrangedGraph = graphToArrangedGraphConverter.convert();
+    nodeNames = arrangedGraph.nodes;
+    let transitions = convertEdgesToTransitions(arrangedGraph);
+
+    let markovChain = new MarkovChain(arrangedGraph.numTransientNodes, arrangedGraph.numAbsorbingNodes, transitions);
     displayErrors(markovChain);
 
     displayTransitionMatrix(markovChain);
