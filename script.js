@@ -139,11 +139,11 @@ function turnLabeledMatrixToLatex(transitionMatrix, rowLabels, columnLabels) {
     assert(transitionMatrix.nRows() == rowLabels.length);
     assert(transitionMatrix.nCols() == columnLabels.length);
     let matrixTex = "";
-    matrixTex += "\\begin{equation*}\\begin{array}{cc}";
+    matrixTex += "\\begin{array}{cc}";
     matrixTex += turnLabelsToHorizontalTexArray(columnLabels) + " & \\\\";
     matrixTex += turnMatrixToLatex(transitionMatrix) + " & ";
     matrixTex += turnLabelsToVerticalArray(rowLabels);
-    matrixTex += "\\end{array}\\end{equation*}";
+    matrixTex += "\\end{array}";
     return matrixTex;
 }
 
@@ -177,7 +177,9 @@ function displayTransitionMatrix(markovChain) {
     try {
         let matrix = markovChain.formTransitionMatrix();
         let labels = nodeNames.copyWithin(0, matrix.nCols());
-        html = turnLabeledMatrixToLatex(matrix, labels, labels);
+        html = "\\begin{equation*}";
+        html += turnLabeledMatrixToLatex(matrix, labels, labels);
+        html += "\\end{equation*}";
     } catch (e) {
         console.log(e);
         html = "<p class='message error'>unknown ERROR</p>";
@@ -202,7 +204,9 @@ function displayExpectedStepsVector(markovChain) {
         try {
             let matrix = markovChain.formExpectedNumberOfStepsByStartStateMatrix();
             let labels = nodeNames.slice( 0, markovChain.numTransientStates);
-            html = turnLabeledMatrixToLatex(matrix, labels, [""]);
+            html = "\\begin{equation*}";
+            html += turnLabeledMatrixToLatex(matrix, labels, [""]);
+            html += "\\end{equation*}";
         } catch (e) {
             console.log(e);
             html = "<p class='message error'>unknown ERROR</p>";
@@ -220,7 +224,9 @@ function displayProbableAbsorbersMatrix(markovChain) {
             let matrix = markovChain.formAbsorbingStateProbabilityMatrix();
             let transientStateLabels = nodeNames.slice( 0, markovChain.numTransientStates);
             let absorbingStateLabels = nodeNames.slice( markovChain.numTransientStates, markovChain.numStates);
-            html = turnLabeledMatrixToLatex(matrix, transientStateLabels, absorbingStateLabels);
+            html = "\\begin{equation*}";
+            html += turnLabeledMatrixToLatex(matrix, transientStateLabels, absorbingStateLabels);
+            html += "\\end{equation*}";
         } catch (e) {
             console.log(e);
             html = "<p class='message error'>unknown ERROR</p>";
