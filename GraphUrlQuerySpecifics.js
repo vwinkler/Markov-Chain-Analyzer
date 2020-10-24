@@ -1,4 +1,4 @@
 class GraphUrlQuerySpecifics {
-    static elementSeparator = ",";
-    static parameterSeparator = ":";
+    static elementSeparator = "_";
+    static parameterSeparator = "'";
 }
