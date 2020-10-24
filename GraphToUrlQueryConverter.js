@@ -29,10 +29,13 @@ class GraphToUrlQueryConverter {
             let x = graphNode.x;
             let y = graphNode.y;
             let radius = graphNode.r;
-            let nodeString = "" + name + ":" + x + ":" + y + ":" + radius;
+            let nodeString = "" + name + GraphUrlQuerySpecifics.parameterSeparator
+                + x + GraphUrlQuerySpecifics.parameterSeparator
+                + y + GraphUrlQuerySpecifics.parameterSeparator
+                + radius;
             nodeStrings.push(nodeString);
         }
-        return nodeStrings.join(",");
+        return nodeStrings.join(GraphUrlQuerySpecifics.elementSeparator);
     }
 
     stringifyEdges() {
@@ -41,9 +44,11 @@ class GraphToUrlQueryConverter {
             let edge = this.graph.edges[edgeId];
             let sourceId = this.nodeTranslation[edge.startNodeid];
             let targetId = this.nodeTranslation[edge.endNodeid];
-            let edgeString = "" + sourceId + ":" + targetId + ":" + edge.weight;
+            let edgeString = "" + sourceId + GraphUrlQuerySpecifics.parameterSeparator
+                + targetId + GraphUrlQuerySpecifics.parameterSeparator
+                + edge.weight;
             edgeStrings.push(edgeString);
         }
-        return edgeStrings.join(",");
+        return edgeStrings.join(GraphUrlQuerySpecifics.elementSeparator);
     }
 }

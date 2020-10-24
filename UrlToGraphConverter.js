@@ -32,13 +32,13 @@ class UrlToGraphConverter {
     }
 
     collectNodes(params) {
-        for (const nodeString of params.get("v").split(",")) {
+        for (const nodeString of params.get("v").split(GraphUrlQuerySpecifics.elementSeparator)) {
             this.addNodeFromString(nodeString);
         }
     }
 
     addNodeFromString(nodeString) {
-        let nodeConfig = nodeString.split(":");
+        let nodeConfig = nodeString.split(GraphUrlQuerySpecifics.parameterSeparator);
         if (nodeConfig.length == 4) {
             let [name, xString, yString, radiusString] = nodeConfig;
             let x = parseFloat(xString);
@@ -50,13 +50,13 @@ class UrlToGraphConverter {
     }
 
     collectEdges(params) {
-        for (const edgeString of params.get("e").split(",")) {
+        for (const edgeString of params.get("e").split(GraphUrlQuerySpecifics.elementSeparator)) {
             this.addEdgeFromString(edgeString);
         }
     }
 
     addEdgeFromString(edgeString) {
-        let edgeConfig = edgeString.split(":");
+        let edgeConfig = edgeString.split(GraphUrlQuerySpecifics.parameterSeparator);
         if (edgeConfig.length == 3) {
             let [sourceString, targetString, weightString] = edgeConfig;
             let source = parseInt(sourceString);
