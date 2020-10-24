@@ -230,7 +230,28 @@ function convertEdgesToTransitions(arrangedGraph) {
     return transitions;
 }
 
+function overwriteSearchParams(paramsToOverwrite, newParams) {
+    let result = new URLSearchParams(paramsToOverwrite);
+    for (const [key, value] of newParams.entries()) {
+        if (result.has(key)) {
+            result.delete(key);
+        }
+        result.append(key, value);
+    }
+    return result;
+}
+
+function displayPermalink() {
+    let graphToUrlQueryConverter = new GraphToUrlQueryConverter(graph);
+    let urlSearchParams = graphToUrlQueryConverter.makeQuery();
+    let url = new URL(document.location);
+    url.search = overwriteSearchParams(url.searchParams, urlSearchParams).toString();
+    document.getElementById("permalink").href = url.toString();
+}
+
 function updateAnalysis() {
+    displayPermalink();
+
     let graphToArrangedGraphConverter = new GraphToArrangedGraphConverter(graph);
     let arrangedGraph = graphToArrangedGraphConverter.convert();
     nodeNames = arrangedGraph.nodes;
