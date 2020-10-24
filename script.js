@@ -241,16 +241,29 @@ function overwriteSearchParams(paramsToOverwrite, newParams) {
     return result;
 }
 
-function displayPermalink() {
+function makePermanentUrl() {
     let graphToUrlQueryConverter = new GraphToUrlQueryConverter(graph);
     let urlSearchParams = graphToUrlQueryConverter.makeQuery();
     let url = new URL(document.location);
     url.search = overwriteSearchParams(url.searchParams, urlSearchParams).toString();
+    return url;
+}
+
+function displayPermalink() {
+    let url = makePermanentUrl();
     document.getElementById("permalink").href = url.toString();
+}
+
+function displayBugreportLink() {
+    let newIssueUrl = new URL("https://github.com/vwinkler/Markov-Chain-Analyzer/issues/new");
+    let issueBody = `\n\n\n[Link to a related problematic graph](${makePermanentUrl()})`;
+    newIssueUrl.searchParams.append("body", issueBody);
+    document.getElementById("bugreport").href = newIssueUrl.toString();
 }
 
 function updateAnalysis() {
     displayPermalink();
+    displayBugreportLink();
 
     let graphToArrangedGraphConverter = new GraphToArrangedGraphConverter(graph);
     let arrangedGraph = graphToArrangedGraphConverter.convert();
