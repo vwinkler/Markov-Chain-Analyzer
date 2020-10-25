@@ -3,6 +3,7 @@ class Program {
     constructor(graph) {
         this.graph = graph;
         this.controlsUI = new ControlsUI(graph);
+        this.errorsUI = new ErrorsUI();
     }
 
     update() {
@@ -14,7 +15,7 @@ class Program {
         let transitions = this.convertEdgesToTransitions(arrangedGraph);
 
         let markovChain = new MarkovChain(arrangedGraph.numTransientNodes, arrangedGraph.numAbsorbingNodes, transitions);
-        displayErrors(markovChain, nodeNames);
+        this.errorsUI.displayErrors(markovChain, nodeNames);
         displayAnalysis(markovChain, nodeNames);
 
         MathJax.typeset();
