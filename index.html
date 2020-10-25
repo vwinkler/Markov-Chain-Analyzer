@@ -14,7 +14,12 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
     </script>
+    <script type="text/javascript" src="Program.js"></script>
     <script type="text/javascript" src="MarkovChain.js"></script>
+    <script type="text/javascript" src="matrixToLatex.js"></script>
+    <script type="text/javascript" src="controlsUI.js"></script>
+    <script type="text/javascript" src="errorUI.js"></script>
+    <script type="text/javascript" src="analysisUI.js"></script>
     <script type="text/javascript" src="GraphUrlQuerySpecifics.js"></script>
     <script type="text/javascript" src="UrlToGraphConverter.js"></script>
     <script type="text/javascript" src="GraphToUrlQueryConverter.js"></script>
@@ -41,7 +46,7 @@
             </div>
             <div id="controls">
                 <p>
-                    <button type="button" onclick="updateAnalysis();">Update</button>
+                    <button type="button" onclick="program.update();">Update</button>
                     <a id="permalink">permalink</a>
                 </p>
                 <p>
