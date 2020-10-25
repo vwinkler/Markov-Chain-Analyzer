@@ -2,10 +2,11 @@ class Program {
 
     constructor(graph) {
         this.graph = graph;
+        this.controlsUI = new ControlsUI(graph);
     }
 
     update() {
-        displayControls(this.graph);
+        this.controlsUI.displayControls();
 
         let graphToArrangedGraphConverter = new GraphToArrangedGraphConverter(this.graph);
         let arrangedGraph = graphToArrangedGraphConverter.convert();
