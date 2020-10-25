@@ -8,18 +8,16 @@ class Program {
     }
 
     update() {
-        this.controlsUI.displayControls();
+        this.processCurrentGraph();
+        this.display();
+    }
 
+    processCurrentGraph() {
         let graphToArrangedGraphConverter = new GraphToArrangedGraphConverter(this.graph);
         let arrangedGraph = graphToArrangedGraphConverter.convert();
-        let nodeNames = arrangedGraph.nodes;
+        this.nodeNames = arrangedGraph.nodes;
         let transitions = this.convertEdgesToTransitions(arrangedGraph);
-
-        let markovChain = new MarkovChain(arrangedGraph.numTransientNodes, arrangedGraph.numAbsorbingNodes, transitions);
-        this.errorsUI.displayErrors(markovChain, nodeNames);
-        this.analysisUI.displayAnalysis(markovChain, nodeNames);
-
-        MathJax.typeset();
+        this.markovChain = new MarkovChain(arrangedGraph.numTransientNodes, arrangedGraph.numAbsorbingNodes, transitions);
     }
 
     convertEdgesToTransitions(arrangedGraph) {
@@ -28,5 +26,16 @@ class Program {
             transitions.push(new Transition(edge.sourceId, edge.targetId, edge.label));
         }
         return transitions;
+    }
+
+    display() {
+        this.controlsUI.displayControls();
+        this.errorsUI.displayErrors(this.markovChain, this.nodeNames);
+        this.analysisUI.displayAnalysis(this.markovChain, this.nodeNames);
+        this.handleTexInHtml();
+    }
+
+    handleTexInHtml() {
+        MathJax.typeset();
     }
 }
