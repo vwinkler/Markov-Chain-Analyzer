@@ -10,4 +10,4 @@ See [https://vwinkler.github.io/Markov-Chain-Analyzer](https://vwinkler.github.i
 
 This project includes third party open source software components: [Graphs](https://github.com/paulfears/Graphs),
 [linear-algebra-js](https://rohan-sawhney.github.io/linear-algebra-js), [MathJax](https://www.mathjax.org/).
-Please see [./Graphs.js](Graphs.js), [./linear-algebra-js/LICENSE](linear-algebra-js/LICENSE).
+Please see [./src/Graphs.js](src/Graphs.js), [./src/linear-algebra-js/LICENSE](src/linear-algebra-js/LICENSE).
